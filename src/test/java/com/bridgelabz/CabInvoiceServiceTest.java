@@ -17,23 +17,23 @@ public class CabInvoiceServiceTest {
     public void whenGivenDistanceAndTime_ShouldReturnTotalFare() {
         double distance = 2.0;
         int time = 5;
-        double fare = invoiceService.calculateFare(distance, time);
-        Assert.assertEquals(25, fare, 0.0);
+        double fare = invoiceService.calculateFare(Ride.RideType.PREMIUM, distance, time);
+        Assert.assertEquals(40, fare, 0.0);
     }
 
     @Test
     public void givenLessDistanceOrTime_ShouldReturnMinimumFare() {
         double distance = 0.1;
         int time = 1;
-        double fare = invoiceService.calculateFare(distance, time);
-        Assert.assertEquals(5, fare, 0.0);
+        double fare = invoiceService.calculateFare(Ride.RideType.PREMIUM, distance, time);
+        Assert.assertEquals(20, fare, 0.0);
     }
 
     @Test
     public void givenMultipleRides_ShouldReturnInvoiceSummary() {
         Ride[] rides = {
-                new Ride(2.0, 5),
-                new Ride(0.1, 1)
+                new Ride(Ride.RideType.NORMAL, 2.0, 5),
+                new Ride(Ride.RideType.NORMAL, 0.1, 1)
         };
         InvoiceSummary summary = invoiceService.calculateFare(rides);
         InvoiceSummary expectedInvoiceSummary = new InvoiceSummary(2, 30.0);
@@ -44,12 +44,12 @@ public class CabInvoiceServiceTest {
     public void givenUserIdAndRides_ShouldReturnInvoice() {
         String userId = "abc.com";
         Ride[] rides = {
-                new Ride(2.0, 5),
-                new Ride(0.1, 1)
+                new Ride(Ride.RideType.PREMIUM, 2.0, 5),
+                new Ride(Ride.RideType.PREMIUM, 0.1, 1)
         };
         invoiceService.addRides(userId, rides);
         InvoiceSummary summary = invoiceService.getInvoiceSummary(userId);
-        InvoiceSummary expectedInvoiceSummary = new InvoiceSummary(2, 30.0);
+        InvoiceSummary expectedInvoiceSummary = new InvoiceSummary(2, 60.0);
         Assert.assertEquals(expectedInvoiceSummary, summary);
     }
 }
